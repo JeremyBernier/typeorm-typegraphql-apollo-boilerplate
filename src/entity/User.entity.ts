@@ -1,5 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import Post from "./Post.entity";
 
 @ObjectType()
 @Entity()
@@ -12,11 +13,11 @@ export default class User {
   @Column()
   username: string;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  firstName: string;
+  @Field()
+  @Column()
+  email: string;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  lastName: string;
+  @Field(() => [Post])
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 }
