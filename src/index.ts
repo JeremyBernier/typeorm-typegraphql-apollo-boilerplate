@@ -1,20 +1,33 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
+import { buildTypeDefsAndResolvers } from "type-graphql";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import express from "express";
 import http from "http";
 import cors from "cors";
+import path from "path";
 import { json } from "body-parser";
-import { typeDefs } from "./typedefs";
-import { resolvers } from "./resolvers";
+import { createDbConnection } from "./db/index";
+
+const resolverPaths = "/resolvers/**/*.resolver.{ts,js}";
 
 interface MyContext {
   token?: String;
 }
 
 const init = async () => {
+  const dbConnection = await createDbConnection();
+
   const app = express();
   const httpServer = http.createServer(app);
+
+  const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
+    resolvers: [path.join(__dirname, resolverPaths)],
+  });
+
   const server = new ApolloServer<MyContext>({
     typeDefs,
     resolvers,
