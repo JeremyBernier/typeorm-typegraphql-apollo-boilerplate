@@ -11,25 +11,26 @@ import {
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import User from "../../entity/User.entity";
+import CreateUserInput from "./types/CreateUser.type";
 
 @Resolver(User)
 export default class UserResolver {
-  @Query(() => String)
-  async hello() {
-    return "world";
-  }
-
   constructor(private readonly userRepository: Repository<User>) {
     this.userRepository = AppDataSource.getRepository(User);
   }
 
   @Query(() => [User])
   async users() {
+    if (Math.random() < 0.9) {
+      throw new Error("blah");
+    }
     return this.userRepository.find();
   }
 
-  @Query(() => String)
-  async blah() {
-    return "blah";
+  @Mutation(() => User)
+  async createUser(@Arg("input") input: CreateUserInput): Promise<User> {
+    return this.userRepository.save({
+      ...input,
+    });
   }
 }

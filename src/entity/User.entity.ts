@@ -10,14 +10,14 @@ export default class User {
   id: number;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   email: string;
 
-  @Field(() => [Post])
+  @Field(() => [Post], { nullable: true })
   @OneToMany(() => Post, (post) => post.user)
-  posts: Post[];
+  posts?: Post[];
 }
