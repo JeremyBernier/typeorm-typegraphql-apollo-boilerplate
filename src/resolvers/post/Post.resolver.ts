@@ -35,20 +35,9 @@ export default class PostResolver {
   }
 
   // @Mutation(() => Post)
-  // async createPost(
-  //   @Arg("input") input: CreatePostInput
-  //   // @Ctx() { user }: Context
-  // ): Promise<Post> {
-  //   // const res = await AppDataSource.createQueryBuilder()
-  //   // .insert()
-  //   // .into(Post)
-  //   // .values({...input})
-  //   // .execute();
-
-  //   return {
-  //     id: 4,
-  //     title: "Fake",
-  //     content: "Fake content",
-  //   };
+  // async createUser(@Arg("input") input: CreatePostInput) {
+  //   return this.postRepository.save({
+  //     ...input,
+  //   });
   // }
 }

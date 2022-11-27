@@ -13,10 +13,15 @@ import { AppDataSource } from "../../data-source";
 import User from "../../entity/User.entity";
 import CreateUserInput from "./types/CreateUser.type";
 import GetUserInput from "./types/GetUser.type";
+import { GraphQLError } from "graphql";
 
 const validateGetUserInput = (input) => {
   if (!Object.values(input).filter((val) => val != null).length) {
-    throw new Error(`Input cannot be empty`);
+    throw new GraphQLError(`Input cannot be empty`, {
+      extensions: {
+        code: "BAD_USER_INPUT",
+      },
+    });
   }
 };
 
@@ -32,13 +37,13 @@ export default class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  async user(@Arg("input") input: GetUserInput): Promise<User> {
+  async user(@Arg("input") input: GetUserInput) {
     validateGetUserInput(input);
     return this.userRepository.findOne({ where: { ...input } });
   }
 
   @Mutation(() => User)
-  async createUser(@Arg("input") input: CreateUserInput): Promise<User> {
+  async createUser(@Arg("input") input: CreateUserInput) {
     return this.userRepository.save({
       ...input,
     });
