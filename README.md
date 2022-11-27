@@ -1,4 +1,4 @@
-# TypeORM, TypeGraphQL, Apollo boilerplate
+# TypeORM, TypeGraphQL, Apollo v4 boilerplate
 
 This is a Node.js boilerplate with TypeORM, TypeGraphQL, and Apollo. Uses PostgreSQL, but feel free to swap that for any database.
 

@@ -21,9 +21,6 @@ export default class UserResolver {
 
   @Query(() => [User])
   async users() {
-    if (Math.random() < 0.9) {
-      throw new Error("blah");
-    }
     return this.userRepository.find();
   }
 
