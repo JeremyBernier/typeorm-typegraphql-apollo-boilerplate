@@ -4,7 +4,6 @@ import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { buildTypeDefsAndResolvers } from "type-graphql";
 import { expressMiddleware } from "@apollo/server/express4";
-import { ApolloServerErrorCode } from "@apollo/server/errors";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import express from "express";
 import http from "http";
