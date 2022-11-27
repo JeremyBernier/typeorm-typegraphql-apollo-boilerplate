@@ -33,7 +33,9 @@ const init = async () => {
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
+
   await server.start();
+
   app.use(
     "/graphql",
     cors<cors.CorsRequest>(),

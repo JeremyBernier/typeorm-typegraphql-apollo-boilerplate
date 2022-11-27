@@ -1,0 +1,29 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:14.6-alpine
+    container_name: postgres_places
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+      PGTZ: "Etc/UTC"
+    volumes:
+      - ./src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5000:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: your@email.com
+      PGADMIN_DEFAULT_PASSWORD: yourpassword
+volumes:
+  postgres:
+  redis:
