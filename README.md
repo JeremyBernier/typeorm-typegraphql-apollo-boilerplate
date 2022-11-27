@@ -6,7 +6,24 @@ I created this due to the unfortunate lack of GitHub repos with this tech stack.
 
 ## Instructions
 
+### Populate .env files
+
 Rename `.env.sample` to `.env` and populate file with given environment variables (eg. database credentials)
+
+### Run Postgres database (or can skip and do it yourself)
+
+```
+docker-compose up -d
+```
+
+You'll need to create a database referenced in your .env file (POSTGRES_DATABASE)
+
+```
+docker exec -it postgres psql -U postgres
+CREATE DATABASE testdb;
+```
+
+### Run Node.js server
 
 ```
 pnpm install

@@ -2,13 +2,13 @@ version: "3"
 services:
   postgres:
     image: postgres:14.6-alpine
-    container_name: postgres_places
+    container_name: postgres
     restart: always
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGTZ: "Etc/UTC"
     volumes:
       - ./src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -22,8 +22,8 @@ services:
     ports:
       - "5000:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: your@email.com
-      PGADMIN_DEFAULT_PASSWORD: yourpassword
+      PGADMIN_DEFAULT_EMAIL: ${POSTGRES_USERNAME}
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD}
 volumes:
   postgres:
   redis:
