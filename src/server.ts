@@ -32,26 +32,6 @@ export const createServer = async () => {
     typeDefs,
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    formatError: (formattedError, error) => {
-      console.log("formattedError", formattedError, error);
-      // Don't give the specific errors to the client.
-      // if (unwrapResolverError(error) instanceof CustomDBError) {
-      //   return { message: 'Internal server error' };
-      // }
-
-      // Strip `Validation: ` prefix and use `extensions.code` instead
-      if (formattedError.message.startsWith("Validation:")) {
-        return {
-          ...formattedError,
-          message: formattedError.message.replace(/^Validation: /, ""),
-          extensions: { ...formattedError?.extensions, code: "VALIDATION" },
-        };
-      }
-
-      // Otherwise, return the original error. The error can also
-      // be manipulated in other ways, as long as it's returned.
-      return formattedError;
-    },
   });
 
   await server.start();
