@@ -9,4 +9,7 @@ export default class CreateUserInput implements Partial<User> {
 
   @Field((type) => String)
   email: string;
+
+  @Field((type) => String)
+  password: string;
 }
