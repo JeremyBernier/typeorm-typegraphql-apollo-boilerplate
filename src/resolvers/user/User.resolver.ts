@@ -15,70 +15,17 @@ import User from "../../entity/User.entity";
 import CreateUserInput from "./types/CreateUser.type";
 import GetUserInput from "./types/GetUser.type";
 import LoginInput from "./types/LoginInput.type";
-import { GraphQLError } from "graphql";
 import { loginUser } from "../../auth";
 import { isValidEmail } from "../../lib/utils";
 import ServerContext from "../../types/ServerContext";
+import {
+  validateGetUserInput,
+  validateLoginInput,
+  validateUsername,
+} from "./validation";
+import { getLoginWhereObj } from "./lib/helpers";
 
 const BANNED_USERNAMES = new Set(["anonymous"]);
-
-const validateGetUserInput = (input) => {
-  if (!Object.values(input).filter((val) => val != null).length) {
-    throw new GraphQLError(`Input cannot be empty`, {
-      extensions: {
-        code: "BAD_USER_INPUT",
-      },
-    });
-  }
-};
-
-const validateLoginInput = (input) => {
-  const { email, username, usernameOrEmail } = input;
-  if (!email?.length && !username?.length && !usernameOrEmail?.length) {
-    throw new GraphQLError(`Must specifiy username or email`, {
-      extensions: {
-        code: "BAD_USER_INPUT",
-      },
-    });
-  }
-};
-
-const USERNAME_MIN_LENGTH = 3;
-
-function validateUsername(username: string) {
-  if (username.length < USERNAME_MIN_LENGTH) {
-    throw new Error(
-      `Username must be longer than ${USERNAME_MIN_LENGTH} characters`
-    );
-  }
-  if (/[^a-zA-Z0-9_]/.test(username)) {
-    throw new Error(`Username cannot have special characters`);
-  }
-}
-
-const getLoginWhereObj = (input) => {
-  const { email, username, usernameOrEmail } = input;
-  const whereObj = email?.length ? { email } : { username };
-
-  if (usernameOrEmail && !email && !username) {
-    if (usernameOrEmail.includes("@")) {
-      whereObj.email = usernameOrEmail;
-    } else {
-      whereObj.username = usernameOrEmail;
-    }
-  } else if (email) {
-    whereObj.email = email;
-  } else if (username) {
-    whereObj.username = username;
-  } else {
-    throw new GraphQLError(`Must specifiy username or email`, {
-      extensions: {
-        code: "BAD_USER_INPUT",
-      },
-    });
-  }
-  return whereObj;
-};
 
 @Resolver(User)
 export default class UserResolver {
@@ -171,7 +118,7 @@ export default class UserResolver {
     @Arg("input") input: LoginInput,
     @Ctx() { req, session, redis }: any
   ) {
-    const { email, username, password, usernameOrEmail } = input;
+    const { password } = input;
     validateLoginInput(input);
 
     const whereObj = getLoginWhereObj(input);
@@ -179,14 +126,14 @@ export default class UserResolver {
     // todo: logout of existing session
     const user = await this.userRepository.findOne({ where: whereObj });
 
-    // if (!user || user.password == null) {
-    //   throw new Error("Invalid account or password");
-    // }
+    if (!user || user.password == null) {
+      throw new Error("Invalid account or password");
+    }
 
-    // const passwordValid = argon2.verify(user.password, password);
-    // if (!passwordValid) {
-    //   throw new Error("Invalid account or password");
-    // }
+    const passwordValid = argon2.verify(user.password, password);
+    if (!passwordValid) {
+      throw new Error("Invalid account or password");
+    }
 
     await loginUser(req, user);
     return user;
