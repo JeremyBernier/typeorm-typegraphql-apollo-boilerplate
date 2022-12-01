@@ -44,7 +44,7 @@ export const createServer = async () => {
 
   // app.use(session(sess));
 
-  const sessionHandler = session({
+  const sessionObj = session({
     store: new RedisStore({ client: redis }),
     secret: process.env.EXPRESS_SESSION_SECRET as string,
     cookie: {
@@ -59,7 +59,7 @@ export const createServer = async () => {
     resave: false,
     saveUninitialized: false,
   });
-  app.use(sessionHandler);
+  app.use(session(sessionObj));
 
   app.get("/blah", (req, res) => {
     if (req.session.views) {
@@ -94,10 +94,8 @@ export const createServer = async () => {
     bodyParser.json(),
     expressMiddleware(server, {
       context: async ({ req }: any) => ({
-        // token: req.headers.token,
-        // req,
+        req,
         session: req.session,
-        // redis,
       }),
     })
   );

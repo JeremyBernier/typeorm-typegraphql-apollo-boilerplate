@@ -103,13 +103,6 @@ export default class UserResolver {
     const { session } = context;
     /** ensure password filtered out */
 
-    console.log("session", session);
-    if (session.bro == null) {
-      session.bro = 1;
-    } else {
-      session.bro++;
-    }
-
     if (session.userId == null) {
       return null;
     }
