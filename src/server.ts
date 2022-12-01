@@ -22,7 +22,6 @@ import { createDbConnection } from "./db/index";
 import { corsOptions } from "./config";
 import redis from "./redis";
 import ServerContext from "./types/ServerContext";
-// import cookieParser from "cookie-parser";
 
 const resolverPaths = "/resolvers/**/*.resolver.{ts,js}";
 
@@ -38,16 +37,6 @@ export const createServer = async () => {
   app.use(cors(corsOptions));
 
   const RedisStore = connectRedis(session as any);
-
-  // const sess = {
-  //   secret: "keyboard cat",
-  //   cookie: {} as any,
-  // };
-
-  // if (app.get("env") === "production") {
-  //   app.set("trust proxy", 1); // trust first proxy
-  //   sess.cookie.secure = true; // serve secure cookies
-  // }
 
   const sessionObj = {
     store: new RedisStore({ client: redis }),
