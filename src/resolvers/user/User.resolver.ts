@@ -178,7 +178,6 @@ export default class UserResolver {
 
     // todo: logout of existing session
     const user = await this.userRepository.findOne({ where: whereObj });
-    console.log("user", user);
 
     // if (!user || user.password == null) {
     //   throw new Error("Invalid account or password");

@@ -1,5 +1,12 @@
-import * as dotenv from "dotenv";
-dotenv.config();
+import path from "path";
+import { config } from "dotenv";
+const isProduction = process.env.NODE_ENV === "production";
+const envFile = isProduction ? ".env.production" : ".env";
+// Import Env Vars
+config({
+  path: path.resolve(process.cwd(), envFile),
+  debug: true,
+});
 import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { buildTypeDefsAndResolvers } from "type-graphql";
@@ -10,13 +17,12 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import http from "http";
 import cors from "cors";
-import path from "path";
 import bodyParser from "body-parser";
 import { createDbConnection } from "./db/index";
-import { isProduction, corsOptions } from "./config";
+import { corsOptions } from "./config";
 import redis from "./redis";
 import ServerContext from "./types/ServerContext";
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
 
 const resolverPaths = "/resolvers/**/*.resolver.{ts,js}";
 
@@ -28,7 +34,8 @@ if (!process.env.EXPRESS_SESSION_SECRET) {
 export const createServer = async () => {
   const dbConnection = await createDbConnection();
 
-  const app = express().use(cookieParser()).use(cors(corsOptions));
+  const app = express();
+  app.use(cors(corsOptions));
 
   const RedisStore = connectRedis(session as any);
 
@@ -42,9 +49,7 @@ export const createServer = async () => {
   //   sess.cookie.secure = true; // serve secure cookies
   // }
 
-  // app.use(session(sess));
-
-  const sessionObj = session({
+  const sessionObj = {
     store: new RedisStore({ client: redis }),
     secret: process.env.EXPRESS_SESSION_SECRET as string,
     cookie: {
@@ -58,7 +63,7 @@ export const createServer = async () => {
     proxy: isProduction,
     resave: false,
     saveUninitialized: false,
-  });
+  };
   app.use(session(sessionObj));
 
   app.get("/blah", (req, res) => {

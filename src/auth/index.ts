@@ -4,7 +4,6 @@ import redis from "../redis";
 
 export const loginUser = async (req, user) => {
   const session = req?.session;
-  console.log("loginUser session", req?.session);
   if (user?.id == null || session == null) {
     console.error("loginUser fail ", req?.session, user);
     throw new Error(
