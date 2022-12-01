@@ -1,4 +1,4 @@
-import { Field, ObjectType, Authorized } from "type-graphql";
+import { Field, ID, ObjectType, Authorized } from "type-graphql";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -12,9 +12,9 @@ import * as argon2 from "argon2";
 @ObjectType()
 @Entity()
 export default class User {
-  @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field(() => ID)
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Field()
   @Column({ unique: true })

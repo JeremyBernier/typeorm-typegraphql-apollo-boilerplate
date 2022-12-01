@@ -1,13 +1,13 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import User from "./User.entity";
 
 @ObjectType()
 @Entity()
 export default class Post {
-  @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field(() => ID)
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Field()
   @Column()
@@ -20,4 +20,8 @@ export default class Post {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
+
+  @Field()
+  @Column()
+  userId: string;
 }
