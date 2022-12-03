@@ -36,6 +36,9 @@ export const createServer = async () => {
 
   const app = express();
   app.use(cors(corsOptions));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  app.use(bodyParser.raw());
 
   const RedisStore = connectRedis(session as any);
 

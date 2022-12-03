@@ -1,3 +1,4 @@
+import { IsString } from "class-validator";
 import { Field, ID, ObjectType } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import User from "./User.entity";
@@ -15,6 +16,7 @@ export default class Post {
 
   @Field()
   @Column()
+  @IsString()
   content: string;
 
   @Field(() => User)

@@ -8,6 +8,14 @@ import {
 } from "typeorm";
 import Post from "./Post.entity";
 import * as argon2 from "argon2";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+  ValidateIf,
+} from "class-validator";
 
 @ObjectType()
 @Entity()
@@ -16,13 +24,21 @@ export default class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Field()
-  @Column({ unique: true })
-  username: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true, unique: true })
+  @ValidateIf((user: User) => user.email == null)
+  @IsString()
+  @MinLength(3)
+  @MaxLength(30)
+  username?: string;
 
   // @Authorized("ADMIN")
   @Column("text", { nullable: true })
   password?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  description?: string;
 
   // @BeforeInsert()
   // async hashPasswordBeforeInsert() {
@@ -32,11 +48,22 @@ export default class User {
   //   }
   // }
 
-  @Field()
-  @Column({ unique: true })
-  email: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true, unique: true })
+  @ValidateIf((user: User) => user.username == null)
+  @IsEmail()
+  // @IsNotEmpty()
+  email?: string;
 
   @Field(() => [Post], { nullable: true })
   @OneToMany(() => Post, (post) => post.user)
   posts?: Post[];
+
+  toJSON() {
+    return {
+      ...this,
+      password: undefined,
+      email: undefined,
+    };
+  }
 }
