@@ -41,7 +41,6 @@ export default class User {
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {
-    console.log("hash password bro", this.password);
     if (this.password) {
       this.password = await argon2.hash(this.password, { hashLength: 12 });
     }
