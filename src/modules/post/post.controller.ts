@@ -24,7 +24,7 @@ api.post("/", async (req: any, res) => {
     const newPost = await createPost(req.body);
     return res.status(200).send(newPost);
   } catch (err) {
-    return res.status(400).send(err);
+    return res.status(400).send(String(err));
   }
 });
 

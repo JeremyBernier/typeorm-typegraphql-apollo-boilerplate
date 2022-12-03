@@ -1,9 +1,9 @@
 import { validate } from "class-validator";
-// import pick from 'lodash/pick';
+import { plainToClass } from "class-transformer";
 import { AppDataSource } from "../../data-source";
 import Post from "../../entity/Post.entity";
 
-const POST_INPUT_FIELDS = ["title", "content"];
+const fields = new Set(Object.keys(new Post()));
 
 export const getPosts = async () => {
   const postRepository = await AppDataSource.getRepository(Post);
@@ -20,23 +20,19 @@ export const getPost = async (id) => {
 };
 
 export const createPost = async (input) => {
-  // validate(post)
-  // const post = new Post();
-  // Object.keys(input).map((key) => {
-  //   post[key] = input[key];
-  // });
-  const post = new Post();
-  // post.content = "Yes";
-  post.title = "Blah";
-  const res = await validate(post, {
-    whitelist: true,
-    forbidNonWhitelisted: true,
-  });
-  console.log("validate", res);
-  // const obj = pick(input,)
+  for (const key in input) {
+    if (!fields.has(key)) {
+      throw new Error(`${key} is not a valid property`);
+    }
+  }
+
+  const inputObj = plainToClass(Post, input);
+
+  const errors = await validate(inputObj);
+  if (errors?.length) {
+    throw new Error(String(errors));
+  }
 
   const postRepository = await AppDataSource.getRepository(Post);
-  return postRepository.save({
-    ...input,
-  });
+  return postRepository.save(inputObj);
 };

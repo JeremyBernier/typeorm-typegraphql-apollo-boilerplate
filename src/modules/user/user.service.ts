@@ -34,7 +34,5 @@ export const createUser = async (input) => {
   }
 
   const userRepository = await AppDataSource.getRepository(User);
-  return userRepository.save({
-    ...input,
-  });
+  return userRepository.save(inputObj);
 };

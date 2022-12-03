@@ -29,10 +29,12 @@ api.post("/", async (req: any, res) => {
 });
 
 api.put("/:id", async (req: any, res) => {
+  // todo
   return res.status(200).send(req.params.id);
 });
 
 api.delete("/:id", async (req: any, res) => {
+  // todo
   return res.status(200).send(req.params.id);
 });
 

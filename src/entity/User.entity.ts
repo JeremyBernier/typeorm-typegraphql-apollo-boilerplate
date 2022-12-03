@@ -34,19 +34,22 @@ export default class User {
 
   // @Authorized("ADMIN")
   @Column("text", { nullable: true })
+  @IsString()
+  @MinLength(8)
+  @MaxLength(40)
   password?: string;
+
+  @BeforeInsert()
+  async hashPasswordBeforeInsert() {
+    console.log("hash password bro", this.password);
+    if (this.password) {
+      this.password = await argon2.hash(this.password, { hashLength: 12 });
+    }
+  }
 
   @Field({ nullable: true })
   @Column({ nullable: true })
   description?: string;
-
-  // @BeforeInsert()
-  // async hashPasswordBeforeInsert() {
-  //   console.log("hash bro", this.password);
-  //   if (this.password) {
-  //     this.password = await argon2.hash(this.password, { hashLength: 12 });
-  //   }
-  // }
 
   @Field({ nullable: true })
   @Column({ nullable: true, unique: true })
