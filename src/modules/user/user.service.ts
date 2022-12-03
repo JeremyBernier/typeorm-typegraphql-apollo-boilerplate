@@ -45,7 +45,6 @@ export const updateUser = async (input) => {
   }
 
   const inputObj = plainToClass(User, input);
-  console.log("inputObj", inputObj);
 
   const errors = await validate(inputObj);
   if (errors?.length) {

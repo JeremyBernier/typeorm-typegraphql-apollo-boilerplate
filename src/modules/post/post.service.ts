@@ -35,8 +35,6 @@ export const createPost = async (input) => {
     throw new Error(String(errors));
   }
 
-  // const postRepository = await AppDataSource.getRepository(Post);
-  // return postRepository.create(input).save();
   const res = await AppDataSource.createQueryBuilder()
     .insert()
     .into(Post)
