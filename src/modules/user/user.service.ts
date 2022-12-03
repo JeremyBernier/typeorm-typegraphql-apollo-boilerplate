@@ -36,3 +36,27 @@ export const createUser = async (input) => {
   const userRepository = await AppDataSource.getRepository(User);
   return userRepository.save(inputObj);
 };
+
+export const updateUser = async (input) => {
+  for (const key in input) {
+    if (!fields.has(key)) {
+      throw new Error(`${key} is not a valid property`);
+    }
+  }
+
+  const inputObj = plainToClass(User, input);
+  console.log("inputObj", inputObj);
+
+  const errors = await validate(inputObj);
+  if (errors?.length) {
+    throw new Error(String(errors));
+  }
+
+  const userRepository = await AppDataSource.getRepository(User);
+  return userRepository.save(inputObj);
+};
+
+export const deleteUser = async (input: { id: string }) => {
+  const userRepository = await AppDataSource.getRepository(User);
+  return userRepository.delete(input.id);
+};

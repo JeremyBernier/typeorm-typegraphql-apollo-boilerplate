@@ -5,6 +5,8 @@ import Post from "../../entity/Post.entity";
 
 const fields = new Set(Object.keys(new Post()));
 
+const parseQueryBuilderInsert = (res) => res?.generatedMaps?.[0];
+
 export const getPosts = async () => {
   const postRepository = await AppDataSource.getRepository(Post);
   return postRepository.find();
@@ -33,6 +35,37 @@ export const createPost = async (input) => {
     throw new Error(String(errors));
   }
 
+  // const postRepository = await AppDataSource.getRepository(Post);
+  // return postRepository.create(input).save();
+  const res = await AppDataSource.createQueryBuilder()
+    .insert()
+    .into(Post)
+    .values(input)
+    .returning("*")
+    .execute();
+
+  return parseQueryBuilderInsert(res);
+};
+
+export const updatePost = async (input) => {
+  for (const key in input) {
+    if (!fields.has(key)) {
+      throw new Error(`${key} is not a valid property`);
+    }
+  }
+
+  const inputObj = plainToClass(Post, input);
+
+  const errors = await validate(inputObj);
+  if (errors?.length) {
+    throw new Error(String(errors));
+  }
+
   const postRepository = await AppDataSource.getRepository(Post);
   return postRepository.save(inputObj);
+};
+
+export const deletePost = async (input: { id: string }) => {
+  const postRepository = await AppDataSource.getRepository(Post);
+  return postRepository.delete(input.id);
 };
