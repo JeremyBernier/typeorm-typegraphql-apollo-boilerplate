@@ -1,6 +1,13 @@
 import { IsString } from "class-validator";
 import { Field, ID, ObjectType } from "type-graphql";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import User from "./User.entity";
 
 @ObjectType()
@@ -18,6 +25,14 @@ export default class Post {
   @Column()
   @IsString()
   content: string;
+
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.posts)
