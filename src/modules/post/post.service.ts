@@ -9,7 +9,11 @@ const parseQueryBuilderInsert = (res) => res?.generatedMaps?.[0];
 
 export const getPosts = async () => {
   const postRepository = await AppDataSource.getRepository(Post);
-  return postRepository.find();
+  return postRepository.find({
+    order: {
+      createdAt: "desc",
+    },
+  });
 };
 
 export const getPost = async (id) => {
