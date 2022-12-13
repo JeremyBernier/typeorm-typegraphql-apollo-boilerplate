@@ -1,4 +1,4 @@
-import { createServer } from "./server";
+import { createServer } from "./app";
 
 const port = process.env.PORT || 4000;
 const host = "localhost";
