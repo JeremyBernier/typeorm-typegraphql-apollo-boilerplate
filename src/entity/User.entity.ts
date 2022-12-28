@@ -57,9 +57,9 @@ export default class User {
   // @IsNotEmpty()
   email?: string;
 
-  @Field(() => [Post], { nullable: true })
-  @OneToMany(() => Post, (post) => post.user)
-  posts?: Post[];
+  // @Field(() => [Post], { nullable: true })
+  // @OneToMany(() => Post, (post) => post.user)
+  // posts?: Post[];
 
   toJSON() {
     return {

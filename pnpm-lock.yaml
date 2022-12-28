@@ -15,6 +15,7 @@ specifiers:
   graphql-tools: ^8.3.12
   ioredis: ^5.2.4
   lodash: ^4.17.21
+  nodemailer: ^6.8.0
   nodemon: ^2.0.20
   pg: ^8.8.0
   reflect-metadata: ^0.1.13
@@ -37,6 +38,7 @@ dependencies:
   graphql-tools: 8.3.12_graphql@16.6.0
   ioredis: 5.2.4
   lodash: 4.17.21
+  nodemailer: 6.8.0
   pg: 8.8.0
   reflect-metadata: 0.1.13
   type-graphql: 2.0.0-beta.1_rq55dqxpbhywxwjvxttjguy4yy
@@ -1441,6 +1443,11 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
+
+  /nodemailer/6.8.0:
+    resolution: {integrity: sha512-EjYvSmHzekz6VNkNd12aUqAco+bOkRe3Of5jVhltqKhEsjw/y0PYPJfp83+s9Wzh1dspYAkUW/YNQ350NATbSQ==}
+    engines: {node: '>=6.0.0'}
     dev: false
 
   /nodemon/2.0.20:

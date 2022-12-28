@@ -39,7 +39,9 @@ api.post("/", async (req: any, res) => {
 
 api.put("/:id", async (req: any, res) => {
   try {
+    console.log("put");
     const newPost = await updatePost({ ...req.body, id: req.params.id });
+    console.log("newPost", newPost);
     return res.status(200).send(newPost);
   } catch (err) {
     return res.status(400).send(String(err));

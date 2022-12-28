@@ -23,8 +23,13 @@ export default class Post {
 
   @Field()
   @Column()
-  @IsString()
+  // @IsString()
   content: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  // @IsString()
+  html?: string;
 
   @Field()
   @CreateDateColumn()
@@ -34,11 +39,11 @@ export default class Post {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => User)
-  @ManyToOne(() => User, (user) => user.posts)
-  user: User;
+  // @Field(() => User)
+  // @ManyToOne(() => User, (user) => user.posts)
+  // user: User;
 
-  @Field()
-  @Column()
-  userId: string;
+  // @Field()
+  // @Column()
+  // userId: string;
 }

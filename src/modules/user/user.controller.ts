@@ -6,6 +6,7 @@ import {
   updateUser,
   deleteUser,
 } from "./user.service";
+import { transporter } from "../mail";
 
 const api = express.Router();
 api.use(express.json());
@@ -31,6 +32,15 @@ api.get("/:id", async (req: any, res) => {
 api.post("/", async (req: any, res) => {
   try {
     const newUser = await createUser(req.body);
+
+    if (newUser.email) {
+      transporter.sendMail({
+        from: "jeremy@jbernier.com",
+        to: newUser.email,
+        subject: "Welcome to Application!",
+        text: "Hello World. This is test content.",
+      });
+    }
     return res.status(200).send(newUser);
   } catch (err) {
     return res.status(400).send(String(err));

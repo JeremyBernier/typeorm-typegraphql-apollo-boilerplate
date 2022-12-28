@@ -51,7 +51,7 @@ export default class PostResolver {
     @Arg("input") input: UpdatePostInput,
     @Ctx() { session }: ServerContext
   ) {
-    const userId = session.userId;
+    // const userId = session.userId;
 
     let post = await this.postRepository.findOne({
       where: { id: input.id },
@@ -61,9 +61,9 @@ export default class PostResolver {
       throw new Error("Post does not exist");
     }
 
-    if (userId != post.userId) {
-      throw new Error("You do not have permission to update this");
-    }
+    // if (userId != post.userId) {
+    //   throw new Error("You do not have permission to update this");
+    // }
 
     return this.postRepository.save({
       ...input,
