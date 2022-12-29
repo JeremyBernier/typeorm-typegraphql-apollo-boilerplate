@@ -7,11 +7,18 @@ const fields = new Set(Object.keys(new Post()));
 
 const parseQueryBuilderInsert = (res) => res?.generatedMaps?.[0];
 
-export const getPosts = async () => {
+interface GetPostsQuery {
+  include_drafts?: boolean;
+}
+
+export const getPosts = async (getPostsQuery: GetPostsQuery) => {
   const postRepository = await AppDataSource.getRepository(Post);
   return postRepository.find({
     order: {
       createdAt: "desc",
+    },
+    where: {
+      ...(getPostsQuery?.include_drafts == null && { public: true }),
     },
   });
 };

@@ -6,13 +6,19 @@ import {
   updatePost,
   deletePost,
 } from "./post.service";
-import restrict from "../../auth/restrict";
+import restrict, { authorize } from "../../auth/restrict";
 
 const api = express.Router();
 api.use(express.json());
 
 api.get("/", async (req: any, res) => {
-  const posts = await getPosts();
+  if (req.query.include_drafts != null) {
+    const err = await authorize(req);
+    if (err) {
+      return res.status(err.status || 403).send(err.message);
+    }
+  }
+  const posts = await getPosts(req.query);
   return res.status(200).send(posts);
 });
 

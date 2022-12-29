@@ -31,6 +31,11 @@ export default class Post {
   // @IsString()
   html?: string;
 
+  @Field((type) => Boolean, { nullable: true })
+  @Column({ type: "bool", default: false, nullable: true })
+  // @IsString()
+  public?: boolean;
+
   @Field()
   @CreateDateColumn()
   createdAt: Date;
