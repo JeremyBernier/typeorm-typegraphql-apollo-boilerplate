@@ -6,6 +6,7 @@ import {
   updatePost,
   deletePost,
 } from "./post.service";
+import restrict from "../../auth/restrict";
 
 const api = express.Router();
 api.use(express.json());
@@ -28,7 +29,7 @@ api.get("/:id", async (req: any, res) => {
   }
 });
 
-api.post("/", async (req: any, res) => {
+api.post("/", restrict, async (req: any, res) => {
   try {
     const newPost = await createPost(req.body);
     return res.status(200).send(newPost);
@@ -37,7 +38,7 @@ api.post("/", async (req: any, res) => {
   }
 });
 
-api.put("/:id", async (req: any, res) => {
+api.put("/:id", restrict, async (req: any, res) => {
   try {
     console.log("put");
     const newPost = await updatePost({ ...req.body, id: req.params.id });
@@ -48,7 +49,7 @@ api.put("/:id", async (req: any, res) => {
   }
 });
 
-api.delete("/:id", async (req: any, res) => {
+api.delete("/:id", restrict, async (req: any, res) => {
   try {
     const deleteRes = await deletePost({ id: req.params.id });
     return res.status(204).send();

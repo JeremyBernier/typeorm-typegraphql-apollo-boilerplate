@@ -1,6 +1,8 @@
 import express from "express";
 import post from "../modules/post/post.controller";
 import user from "../modules/user/user.controller";
+import jwt from "jsonwebtoken";
+import restrict from "../auth/restrict";
 // import { upload, handleUpload } from "./upload";
 
 const api = express.Router();
@@ -10,38 +12,56 @@ api.use(express.json());
 api.use("/posts", post);
 api.use("/users", user);
 
-api.post("/login", async (req: any, res) => {
+api.post("/login", async (req: any, res, next) => {
   const { email, password } = req.body;
   console.log("req.body", req.body);
-  // const user = await this.userRepository.findOne({ where: whereObj });
-  // req.session.regenerate(() => {
-  //   req.session.user = {
-  //     email: "fake@user.com",
-  //     username: "charlie",
-  //   };
-  // });
 
-  req.session.user = {
-    email: "fake@user.com",
-    username: "charlie",
+  const existingUser = {
+    id: "some-id-goes-here",
+    email: "your@email.com",
   };
-  console.log("req.session", req.session);
-  return res.status(200).send();
+
+  let token;
+  try {
+    //Creating jwt token
+    token = jwt.sign(
+      { userId: existingUser.id, email: existingUser.email },
+      process.env.EXPRESS_SESSION_SECRET,
+      { expiresIn: "7d" }
+    );
+  } catch (err) {
+    console.log(err);
+    const error = new Error("Error! Something went wrong.");
+    return next(error);
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      userId: existingUser.id,
+      email: existingUser.email,
+      token,
+    },
+  });
 });
 
-function restrict(req, res, next) {
-  console.log("restrict check - req.session", req.session);
-  if (req.session.user) {
-    next();
-  } else {
-    req.session.error = "Access denied!";
-    res.redirect("/login");
-  }
-}
-
 api.get("/restricted", restrict, (req, res) => {
-  console.log("req.session", req.session);
-  res.send("Restricted stuff here brah " + req.session.user.email);
+  // console.log("req.session", req.session);
+  // console.log("req.headers", req.headers);
+
+  // const token = req.headers.authorization.split(" ")[1];
+  // //Authorization: 'Bearer TOKEN'
+  // if (!token) {
+  //   res
+  //     .status(200)
+  //     .json({ success: false, message: "Error! Token was not provided." });
+  // }
+  // //Decoding the token
+  // const decodedToken = jwt.verify(token, process.env.EXPRESS_SESSION_SECRET);
+  // console.log("decodedToken", decodedToken);
+
+  res.send("Restricted stuff here");
+  // res.send("Restricted stuff here brah " + req.session.user.email);
 });
 
 api.get("/test2", (req, res) => {
