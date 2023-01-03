@@ -28,15 +28,19 @@ api.post("/", async (req: Request, res: Response) => {
         process.env.EXPRESS_SESSION_SECRET,
         { expiresIn: "2d" }
       );
+      const verifyUrl = `${process.env.API_URL}/users/verify_email/?token=${token}`;
       transporter.sendMail({
         from: process.env.EMAIL,
         to: newUser.email,
         subject: "Confirm Jeremy Bernier Newsletter Subscription",
-        text: `Hey it's Jeremy,
+        //         text: `Hey it's Jeremy,
 
-Click the following like to confirm your email subscription and start receiving updates straight to your inbox: ${token}
+        // Click the following like to confirm your email subscription and start receiving updates straight to your inbox: ${token}
 
-Link expires in 2 days. Of course your email will never be shared with anyone, and you can cancel anytime.`,
+        // Link expires in 2 days. Of course your email will never be shared with anyone, and you can cancel anytime.`,
+        html: `<p>Hey it's Jeremy,</p>
+<p>Click the following like to confirm your email subscription and start receiving updates straight to your inbox: <a href="${verifyUrl}">Email Confirmation Link</a></p>
+<p>Link expires in 2 days. Of course your email will never be shared with anyone, and you can cancel anytime.</p>`,
       });
     }
     return res.status(200).send(newUser);
