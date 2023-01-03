@@ -41,9 +41,9 @@ export default class User {
 
   // @Authorized("ADMIN")
   @Column("text", { nullable: true })
-  @IsString()
-  @MinLength(8)
-  @MaxLength(40)
+  // @IsString()
+  // @MinLength(8)
+  // @MaxLength(40)
   password?: string;
 
   @BeforeInsert()
@@ -56,6 +56,10 @@ export default class User {
   @Field({ nullable: true })
   @Column({ nullable: true })
   description?: string;
+
+  @Field({ nullable: false })
+  @Column({ nullable: false, default: false })
+  emailVerified: boolean;
 
   // @Field(() => [Post], { nullable: true })
   // @OneToMany(() => Post, (post) => post.user)

@@ -51,8 +51,17 @@ export const updateUser = async (input) => {
     throw new Error(String(errors));
   }
 
-  const userRepository = await AppDataSource.getRepository(User);
-  return userRepository.save(inputObj);
+  const whereArr: [string, any] = input.id
+    ? ["id = :id", { id: input.id }]
+    : ["email = :email", { email: input.email }];
+
+  return AppDataSource.createQueryBuilder()
+    .update(User)
+    .set({ ...input })
+    .where(...whereArr)
+    .execute();
+  // const userRepository = await AppDataSource.getRepository(User);
+  // return userRepository.save(inputObj);
 };
 
 export const deleteUser = async (input: { id: string }) => {

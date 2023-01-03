@@ -5,7 +5,13 @@ interface ErrorObj {
   message?: string;
 }
 
-const verifyJwtToken = (token, secret): Promise<[Error, any]> =>
+export const signJwtToken = (
+  json: any,
+  secret: string,
+  opts: { expiresIn: string }
+) => jwt.sign(json, secret, opts);
+
+export const verifyJwtToken = (token, secret): Promise<[Error, any]> =>
   new Promise((resolve) =>
     jwt.verify(token, secret, (err, decoded) => resolve([err, decoded]))
   );
