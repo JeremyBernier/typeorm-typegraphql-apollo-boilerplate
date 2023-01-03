@@ -35,7 +35,7 @@ api.post("/", async (req: any, res) => {
 
     if (newUser.email) {
       transporter.sendMail({
-        from: "jeremy@jbernier.com",
+        from: process.env.EMAIL,
         to: newUser.email,
         subject: "Welcome to Application!",
         text: "Hello World. This is test content.",

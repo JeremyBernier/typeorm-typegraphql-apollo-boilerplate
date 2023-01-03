@@ -32,6 +32,13 @@ export default class User {
   @MaxLength(30)
   username?: string;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true, unique: true })
+  @ValidateIf((user: User) => user.username == null)
+  @IsEmail()
+  // @IsNotEmpty()
+  email?: string;
+
   // @Authorized("ADMIN")
   @Column("text", { nullable: true })
   @IsString()
@@ -49,13 +56,6 @@ export default class User {
   @Field({ nullable: true })
   @Column({ nullable: true })
   description?: string;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true, unique: true })
-  @ValidateIf((user: User) => user.username == null)
-  @IsEmail()
-  // @IsNotEmpty()
-  email?: string;
 
   // @Field(() => [Post], { nullable: true })
   // @OneToMany(() => Post, (post) => post.user)
